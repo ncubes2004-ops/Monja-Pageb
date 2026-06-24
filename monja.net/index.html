@@ -257,13 +257,17 @@
   }
 
   /* ---------- Page 2: the question ---------- */
-  #page2 .question-title{
+  #page2 .question-title,
+  #page2b .question-title,
+  #page2c .question-title{
     font-size: clamp(1.6rem, 6vw, 2.4rem);
     margin-bottom: 8px;
     position: relative;
     z-index: 3;
   }
-  #page2 .teaser{
+  #page2 .teaser,
+  #page2b .teaser,
+  #page2c .teaser{
     font-size: 0.9rem;
     color: var(--plum-soft);
     min-height: 20px;
@@ -272,7 +276,7 @@
     z-index: 3;
   }
 
-  #yesBtn{
+  .yes-btn{
     font-family: 'Fredoka', sans-serif;
     font-weight: 700;
     font-size: clamp(1.3rem, 4vw, 1.7rem);
@@ -291,9 +295,21 @@
     z-index: 4;
     white-space: nowrap;
   }
-  #yesBtn:hover{ filter: brightness(1.05); }
+  .yes-btn:hover{ filter: brightness(1.05); }
 
-  #noBtn{
+  .yes-gif{
+    position: fixed;
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: 0 8px 18px -8px rgba(199,62,51,0.5);
+    pointer-events: none;
+    z-index: 4;
+    transition: left 0.45s cubic-bezier(.34,1.56,.64,1), top 0.45s cubic-bezier(.34,1.56,.64,1), width 0.45s cubic-bezier(.34,1.56,.64,1), height 0.45s cubic-bezier(.34,1.56,.64,1), opacity 0.3s ease;
+  }
+
+  .no-btn{
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
     font-size: 0.72rem;
@@ -311,7 +327,7 @@
     z-index: 5;
   }
 
-  #noGif{
+  .no-gif{
     position: fixed;
     top: 70%;
     left: calc(50% + 70px);
@@ -432,7 +448,7 @@
 
   @media (max-width: 480px){
     .card{ padding: 34px 22px 30px; }
-    #yesBtn{ padding: 18px 40px; }
+    .yes-btn{ padding: 18px 40px; }
     .choices{ gap: 14px; }
     .choice-card{ width: 150px; padding: 18px 12px; }
   }
@@ -492,9 +508,32 @@
     <h1 class="question-title">Will you go out with me Monja Sara Plab?</h1>
     <p class="teaser" id="teaserText">&nbsp;</p>
 
-    <button id="yesBtn">YES 🤍</button>
-    <button id="noBtn">No</button>
-    <img id="noGif" src="https://media1.tenor.com/m/HzKjCOw8gekAAAAd/baby-angry.gif" alt="" />
+    <button id="yesBtn" class="yes-btn">YES 🤍</button>
+    <img id="yesGif" class="yes-gif" src="https://media1.tenor.com/m/zdIz9SBFqRkAAAAd/ryzu.gif" alt="" />
+    <button id="noBtn" class="no-btn">No</button>
+    <img id="noGif" class="no-gif" src="https://media1.tenor.com/m/HzKjCOw8gekAAAAd/baby-angry.gif" alt="" />
+  </section>
+
+  <!-- ===================== PAGE 2B: ARE YOU SURE? ===================== -->
+  <section id="page2b" class="page">
+    <h1 class="question-title">Are you sure Diva?</h1>
+    <p class="teaser" id="teaserText2b">&nbsp;</p>
+
+    <button id="yesBtn2b" class="yes-btn">YES 🤍</button>
+    <img id="yesGif2b" class="yes-gif" src="https://media1.tenor.com/m/zdIz9SBFqRkAAAAd/ryzu.gif" alt="" />
+    <button id="noBtn2b" class="no-btn">No</button>
+    <img id="noGif2b" class="no-gif" src="https://media1.tenor.com/m/HzKjCOw8gekAAAAd/baby-angry.gif" alt="" />
+  </section>
+
+  <!-- ===================== PAGE 2C: LAST CHANCE ===================== -->
+  <section id="page2c" class="page">
+    <h1 class="question-title">This is your last chance, yes or no?</h1>
+    <p class="teaser" id="teaserText2c">&nbsp;</p>
+
+    <button id="yesBtn2c" class="yes-btn">YES 🤍</button>
+    <img id="yesGif2c" class="yes-gif" src="https://media1.tenor.com/m/zdIz9SBFqRkAAAAd/ryzu.gif" alt="" />
+    <button id="noBtn2c" class="no-btn">No</button>
+    <img id="noGif2c" class="no-gif" src="https://media1.tenor.com/m/HzKjCOw8gekAAAAd/baby-angry.gif" alt="" />
   </section>
 
   <!-- ===================== PAGE 2.5: PROVE YOUR MIGHT (MAZE) ===================== -->
@@ -554,6 +593,8 @@
   const bgMusic   = document.getElementById('bgMusic');
   const page1     = document.getElementById('page1');
   const page2     = document.getElementById('page2');
+  const page2b    = document.getElementById('page2b');
+  const page2c    = document.getElementById('page2c');
   const pageMaze  = document.getElementById('pageMaze');
   const page3     = document.getElementById('page3');
 
@@ -597,87 +638,167 @@
     }
   });
 
-  /* ----------------------- PAGE 2: YES / NO GAME ----------------------- */
-  const yesBtn     = document.getElementById('yesBtn');
-  const noBtn      = document.getElementById('noBtn');
-  const noGif      = document.getElementById('noGif');
-  const teaserText = document.getElementById('teaserText');
+  /* ----------------------- PAGES 2 / 2B / 2C: YES / NO GAME ----------------------- */
+  const teaserSets = {
+    page2: [
+      "Not so fast... 😏",
+      "She's basically begging you to click YES 👀",
+      "Nice try! 😂",
+      "The NO button is shy 🙈",
+      "Okay okay, just click YES already 🤍",
+      "Resistance is futile 🥺"
+    ],
+    page2b: [
+      "Yes, really, really sure. 😏",
+      "Diva, the NO button doesn't want to be clicked 👀",
+      "C'mon, commit to it! 😂",
+      "It's still a yes. 🙈",
+      "Just tap YES, it's right there 🤍",
+      "You already know the answer 🥺"
+    ],
+    page2c: [
+      "Last. Chance. 😏",
+      "The NO button is running out of places to hide 👀",
+      "This is truly it 😂",
+      "No more chances after this 🙈",
+      "YES is the only way forward 🤍",
+      "It was always going to be yes 🥺"
+    ]
+  };
 
-  let yesScale = 1;
-  let attempts  = 0;
-  const MAX_SCALE = 14;
+  function setupYesNoGame(config){
+    const { yesBtn, yesGif, noBtn, noGif, teaserText, teaserKey, onYes } = config;
+    const teasers = teaserSets[teaserKey];
 
-  const teasers = [
-    "Not so fast... 😏",
-    "She's basically begging you to click YES 👀",
-    "Nice try! 😂",
-    "The NO button is shy 🙈",
-    "Okay okay, just click YES already 🤍",
-    "Resistance is futile 🥺"
-  ];
+    let yesScale = 1;
+    let attempts = 0;
+    const MAX_SCALE = 14;
 
-  function placeNoRandomly(){
-    const margin = 60;
-    const btnW = noBtn.offsetWidth || 70;
-    const btnH = noBtn.offsetHeight || 32;
-    const maxX = window.innerWidth  - btnW - margin;
-    const maxY = window.innerHeight - btnH - margin;
-    const x = margin + Math.random() * Math.max(maxX - margin, 50);
-    const y = margin + Math.random() * Math.max(maxY - margin, 50);
-    noBtn.style.left = x + 'px';
-    noBtn.style.top  = y + 'px';
-    noBtn.style.transform = 'translate(0,0)';
+    function placeNoRandomly(){
+      const margin = 60;
+      const btnW = noBtn.offsetWidth || 70;
+      const btnH = noBtn.offsetHeight || 32;
+      const maxX = window.innerWidth  - btnW - margin;
+      const maxY = window.innerHeight - btnH - margin;
+      const x = margin + Math.random() * Math.max(maxX - margin, 50);
+      const y = margin + Math.random() * Math.max(maxY - margin, 50);
+      noBtn.style.left = x + 'px';
+      noBtn.style.top  = y + 'px';
+      noBtn.style.transform = 'translate(0,0)';
 
-    // The gif tags along right next to the NO button, wherever it flees
-    noGif.style.left = (x + btnW + 8) + 'px';
-    noGif.style.top  = (y + btnH / 2 - noGif.offsetHeight / 2) + 'px';
-  }
-
-  function growYes(){
-    attempts++;
-    yesScale = Math.min(yesScale * 1.2, MAX_SCALE);
-    yesBtn.style.transform = `translate(-50%, -50%) scale(${yesScale})`;
-    teaserText.textContent = teasers[Math.min(attempts - 1, teasers.length - 1)];
-
-    if (yesScale >= 5) {
-      // Once it's basically inevitable, let the NO button (and its sidekick) bow out gracefully
-      noBtn.style.opacity = '0';
-      noBtn.style.pointerEvents = 'none';
-      noGif.style.opacity = '0';
+      // The gif tags along right next to the NO button, wherever it flees
+      noGif.style.left = (x + btnW + 8) + 'px';
+      noGif.style.top  = (y + btnH / 2 - noGif.offsetHeight / 2) + 'px';
     }
-  }
 
-  function fleeFromNo(){
-    placeNoRandomly();
-    growYes();
-  }
+    function growYes(){
+      attempts++;
+      yesScale = Math.min(yesScale * 1.2, MAX_SCALE);
+      yesBtn.style.transform = `translate(-50%, -50%) scale(${yesScale})`;
+      teaserText.textContent = teasers[Math.min(attempts - 1, teasers.length - 1)];
 
-  noBtn.addEventListener('mouseenter', fleeFromNo); // desktop hover-evade
-  noBtn.addEventListener('click', fleeFromNo);       // fallback / touch tap
-  noBtn.addEventListener('touchstart', function(e){
-    e.preventDefault();
-    fleeFromNo();
-  }, { passive: false });
+      // Grow the gif too, but much more gently than the button so it never
+      // swallows the YES text, and place it clear of the button's edge.
+      const gifScale = Math.min(1 + (yesScale - 1) * 0.35, 5);
+      const gifSize = 64 * gifScale;
+      yesGif.style.width  = gifSize + 'px';
+      yesGif.style.height = gifSize + 'px';
 
-  window.addEventListener('resize', () => {
-    if (page2.classList.contains('active') && noBtn.style.left) {
+      requestAnimationFrame(() => {
+        const rect = yesBtn.getBoundingClientRect();
+        const gap = 14;
+        yesGif.style.left = (rect.left - gifSize - gap) + 'px';
+        yesGif.style.top  = (rect.top + rect.height / 2 - gifSize / 2) + 'px';
+      });
+
+      if (yesScale >= 5) {
+        // Once it's basically inevitable, let the NO button (and its sidekick) bow out gracefully
+        noBtn.style.opacity = '0';
+        noBtn.style.pointerEvents = 'none';
+        noGif.style.opacity = '0';
+      }
+    }
+
+    function placeYesGif(){
+      const rect = yesBtn.getBoundingClientRect();
+      const gifSize = yesGif.offsetWidth || 64;
+      const gap = 14;
+      yesGif.style.left = (rect.left - gifSize - gap) + 'px';
+      yesGif.style.top  = (rect.top + rect.height / 2 - gifSize / 2) + 'px';
+    }
+
+    function fleeFromNo(){
       placeNoRandomly();
+      growYes();
+    }
+
+    noBtn.addEventListener('mouseenter', fleeFromNo); // desktop hover-evade
+    noBtn.addEventListener('click', fleeFromNo);       // fallback / touch tap
+    noBtn.addEventListener('touchstart', function(e){
+      e.preventDefault();
+      fleeFromNo();
+    }, { passive: false });
+
+    const ownerPage = yesBtn.closest('.page');
+
+    window.addEventListener('resize', () => {
+      if (ownerPage.classList.contains('active') && noBtn.style.left) {
+        placeNoRandomly();
+      }
+      if (ownerPage.classList.contains('active')) {
+        placeYesGif();
+      }
+    });
+
+    // Initial placement once this page becomes visible
+    const observer = new MutationObserver(() => {
+      if (ownerPage.classList.contains('active') && !noBtn.dataset.placed) {
+        placeNoRandomly();
+        placeYesGif();
+        noBtn.dataset.placed = 'true';
+      }
+    });
+    observer.observe(ownerPage, { attributes: true, attributeFilter: ['class'] });
+
+    yesBtn.addEventListener('click', onYes);
+  }
+
+  setupYesNoGame({
+    yesBtn: document.getElementById('yesBtn'),
+    yesGif: document.getElementById('yesGif'),
+    noBtn: document.getElementById('noBtn'),
+    noGif: document.getElementById('noGif'),
+    teaserText: document.getElementById('teaserText'),
+    teaserKey: 'page2',
+    onYes: function(){
+      goToPage(page2, page2b);
     }
   });
 
-  // Initial placement once page 2 becomes visible
-  const page2Observer = new MutationObserver(() => {
-    if (page2.classList.contains('active') && !noBtn.dataset.placed) {
-      placeNoRandomly();
-      noBtn.dataset.placed = 'true';
+  setupYesNoGame({
+    yesBtn: document.getElementById('yesBtn2b'),
+    yesGif: document.getElementById('yesGif2b'),
+    noBtn: document.getElementById('noBtn2b'),
+    noGif: document.getElementById('noGif2b'),
+    teaserText: document.getElementById('teaserText2b'),
+    teaserKey: 'page2b',
+    onYes: function(){
+      goToPage(page2b, page2c);
     }
   });
-  page2Observer.observe(page2, { attributes: true, attributeFilter: ['class'] });
 
-  yesBtn.addEventListener('click', function(){
-    spawnConfetti(90);
-    goToPage(page2, pageMaze);
-    initMaze();
+  setupYesNoGame({
+    yesBtn: document.getElementById('yesBtn2c'),
+    yesGif: document.getElementById('yesGif2c'),
+    noBtn: document.getElementById('noBtn2c'),
+    noGif: document.getElementById('noGif2c'),
+    teaserText: document.getElementById('teaserText2c'),
+    teaserKey: 'page2c',
+    onYes: function(){
+      spawnConfetti(90);
+      goToPage(page2c, pageMaze);
+      initMaze();
+    }
   });
 
   /* ----------------------- PAGE 3: DATE CHOOSER ----------------------- */
